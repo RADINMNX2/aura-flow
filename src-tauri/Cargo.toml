@@ -1,0 +1,19 @@
+[package]
+name = "flow-studio"
+version = "1.0.0"
+description = "flow. - local frame interpolation studio"
+authors = ["RADINMNX"]
+license = "MIT"
+repository = "https://github.com/RADINMNX2/aura-flow"
+edition = "2021"
+rust-version = "1.82"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rfd = "0.15"
+flow-core = { path = "../crates/flow-core" }

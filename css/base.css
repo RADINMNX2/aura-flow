@@ -1,0 +1,113 @@
+/* flow. layer 1 - tokens, fonts, atmosphere, type. Load order: base -> shell -> kit -> panel -> overlays -> legibility */
+
+:root {
+  --bg: #08070B;
+  --ink: #F6F2F3;
+  --ink-2: #AEA7AE;
+  --ink-3: #7E777F;
+
+  --accent: #FF2E4C;
+  --accent-2: #E01433;
+  --accent-soft: rgba(255, 46, 76, 0.12);
+
+  --mint: #3BE8B0;
+  --cyan: #38D4FF;
+  --amber: #FFB057;
+  --violet: #8B7CFF;
+
+  --line: rgba(255, 255, 255, 0.07);
+  --line-2: rgba(255, 255, 255, 0.13);
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-2: rgba(255, 255, 255, 0.06);
+
+  /* shape law: media controls circles, buttons/inputs 10-16 by size, panels 20-28, chips full pill */
+  --ctl-sm: 34px;
+  --ctl-md: 40px;
+  --ctl-lg: 48px;
+
+  --r-xl: 28px;
+  --r-lg: 24px;
+  --r-md: 14px;
+  --r-pill: 999px;
+
+  --font-display: "Bricolage Grotesque", "Instrument Sans", system-ui, sans-serif;
+  --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 0.16s;
+  --t: 0.22s;
+  --t-slow: 0.32s;
+
+  --z-atmos: 0;
+  --z-app: 1;
+  --z-modal: 40;
+  --z-toast: 60;
+  --z-palette: 70;
+}
+
+@font-face { font-family: "Bricolage Grotesque"; src: url("../assets/fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 300 800; font-display: swap; }
+@font-face { font-family: "Instrument Sans"; src: url("../assets/fonts/instrument-sans.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../assets/fonts/geist-mono.woff2") format("woff2"); font-weight: 400 500; font-display: swap; }
+@font-face { font-family: "Vazirmatn"; src: url("../assets/fonts/vazirmatn.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
+/* Persian swaps the whole voice: Vazirmatn everywhere, no negative tracking that mangles it */
+html[lang="fa"] {
+  --font-display: "Vazirmatn", "Bricolage Grotesque", system-ui, sans-serif;
+  --font-ui: "Vazirmatn", "Instrument Sans", system-ui, sans-serif;
+}
+html[lang="fa"] body { line-height: 1.55; }
+html[lang="fa"] h1, html[lang="fa"] h2, html[lang="fa"] h3,
+html[lang="fa"] .pane-head h1, html[lang="fa"] .modal h3, html[lang="fa"] .rcp-card-head h3 { letter-spacing: 0; }
+html[lang="fa"] .brand-text, html[lang="fa"] .about-name { font-family: "Bricolage Grotesque", system-ui, sans-serif; }
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -0.02em; font-weight: 700; }
+h2 { font-family: var(--font-ui); font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+i { font-style: normal; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.muted { color: var(--ink-2); }
+.dim { color: var(--ink-3); }
+
+::selection { background: rgba(255, 46, 76, 0.32); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+[hidden] { display: none !important; }
+* { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.13) transparent; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 99px; border: 2px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.22); background-clip: content-box; }
+
+/* atmosphere: three drifting gradients + tiled grain + vignette.
+   Deliberately no filter / mix-blend-mode / full-viewport SVG turbulence: a blended layer over
+   animating gradients re-composites every frame and costs real fps on this GPU. */
+.atmos { position: fixed; inset: 0; z-index: var(--z-atmos); pointer-events: none; overflow: hidden; contain: strict; }
+.atmos .blob { position: absolute; display: block; border-radius: 50%; opacity: 0.5; will-change: transform; }
+.b1 { width: 58vw; height: 58vw; left: -16vw; top: -20vw; background: radial-gradient(circle, rgba(255,46,76,0.30), transparent 66%); animation: drift-a 78s var(--ease) infinite alternate; }
+.b2 { width: 44vw; height: 44vw; right: -12vw; top: 8vh; background: radial-gradient(circle, rgba(139,124,255,0.15), transparent 68%); animation: drift-b 96s var(--ease) infinite alternate; }
+.b3 { width: 38vw; height: 38vw; left: 24vw; bottom: -18vh; background: radial-gradient(circle, rgba(255,46,76,0.16), transparent 70%); animation: drift-c 110s var(--ease) infinite alternate; }
+.grain { position: absolute; inset: 0; opacity: 0.055; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E"); background-size: 140px 140px; }
+.vignette { position: absolute; inset: 0; display: block; background: radial-gradient(120% 90% at 50% 40%, transparent 40%, rgba(3,2,4,0.72) 100%); }
+
+@keyframes drift-a { to { transform: translate3d(6vw, 4vh, 0) scale(1.1); } }
+@keyframes drift-b { to { transform: translate3d(-5vw, 6vh, 0) scale(1.06); } }
+@keyframes drift-c { to { transform: translate3d(4vw, -5vh, 0) scale(1.12); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes ping { 50% { opacity: 0.35; transform: scale(0.8); } }

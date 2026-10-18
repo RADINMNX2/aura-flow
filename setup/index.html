@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="author" content="RADINMNX" />
+<title>flow. setup</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2308070B'/><path d='M7 16h4l3-7 4 14 3-7h4' stroke='%23FF2E4C' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+<link rel="stylesheet" href="/assets/phosphor/regular/style.css" />
+<link rel="stylesheet" href="/assets/phosphor/fill/style.css" />
+<link rel="stylesheet" href="/css/base.css" />
+<link rel="stylesheet" href="/css/kit-controls.css" />
+<link rel="stylesheet" href="/setup/setup.css" />
+<link rel="stylesheet" href="/setup/motion.css" />
+</head>
+<body class="setup-body">
+<div class="atmos" aria-hidden="true">
+  <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+  <i class="grain"></i>
+  <i class="vignette"></i>
+</div>
+
+<div class="setup-shell" id="setup-shell">
+  <div class="setup-frame" id="setup-frame">
+    <div class="frame-aura" aria-hidden="true"><i class="fa-1"></i><i class="fa-2"></i><i class="fa-3"></i></div>
+    <div class="s-cinema" id="s-cinema" aria-hidden="true"></div>
+    <header class="s-chrome" data-tauri-drag-region>
+      <div class="s-brand" data-tauri-drag-region>
+        <span class="s-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h3.2l2.2-5.4L11 17l2.1-5h3.1l1.9-3.1L20 12h1" /></svg></span>
+        <span class="s-word">flow<i>.</i></span>
+        <span class="s-tag">setup</span>
+      </div>
+      <div class="s-chrome-mid" id="s-chrome-mid">
+        <div class="inst-pill" id="inst-pill" hidden>
+          <span class="ip-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7" /></svg></span>
+          <span class="ip-copy">
+            <b id="ip-title">flow 1.0.0 is already here</b>
+            <em id="ip-path">—</em>
+          </span>
+          <span class="ip-acts">
+            <button class="ip-btn" id="ip-repair" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 5.7" /><path d="M20 5v6h-6" /></svg>
+              <span id="ip-repair-label" data-i18n="welcome.repair">Repair</span>
+            </button>
+            <button class="ip-btn is-danger" id="ip-uninstall" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9.5 7V5h5v2M6.5 7l.8 13h9.4l.8-13M10 11v5M14 11v5" /></svg>
+              <span data-i18n="welcome.uninstall">Uninstall</span>
+            </button>
+          </span>
+        </div>
+      </div>
+      <div class="s-chrome-right">
+        <button class="s-lang" id="lang-btn" type="button" aria-label="Switch language">
+          <i class="ph ph-translate"></i><span id="lang-cur">EN</span>
+        </button>
+        <span class="s-ver">v1.0.0</span>
+        <span class="s-win-divider" aria-hidden="true"></span>
+        <button class="s-win" id="win-min" type="button" data-i18n-aria="chrome.min"><i class="ph ph-minus"></i></button>
+        <button class="s-win is-close" id="win-close" type="button" data-i18n-aria="chrome.close"><i class="ph ph-x"></i></button>
+      </div>
+    </header>
+
+    <div class="s-body">
+      <nav class="s-rail" aria-label="Setup steps">
+        <div class="s-rail-head">
+          <span class="s-eyebrow" data-i18n="welcome.eyebrow">aura studio installer</span>
+          <b>flow setup</b>
+        </div>
+
+        <ol class="s-steps" id="s-steps">
+          <i class="s-steps-ind" id="s-ind" aria-hidden="true"></i>
+          <li class="s-step is-now" data-step="0">
+            <span class="s-step-dot"><i class="ph ph-sparkle s-ico"></i><i class="ph ph-check s-ck"></i></span>
+            <span class="s-step-txt"><b data-i18n="rail.welcome">Welcome</b><em data-i18n="rail.welcomeSub">what this is</em></span>
+          </li>
+          <li class="s-step" data-step="1">
+            <span class="s-step-dot"><i class="ph ph-gauge s-ico"></i><i class="ph ph-check s-ck"></i></span>
+            <span class="s-step-txt"><b data-i18n="rail.system">System check</b><em data-i18n="rail.systemSub">everything flow needs</em></span>
+          </li>
+          <li class="s-step" data-step="2">
+            <span class="s-step-dot"><i class="ph ph-sliders-horizontal s-ico"></i><i class="ph ph-check s-ck"></i></span>
+            <span class="s-step-txt"><b data-i18n="rail.options">Options</b><em data-i18n="rail.optionsSub">folder and shortcuts</em></span>
+          </li>
+          <li class="s-step" data-step="3">
+            <span class="s-step-dot"><i class="ph ph-rocket-launch s-ico"></i><i class="ph ph-check s-ck"></i></span>
+            <span class="s-step-txt"><b data-i18n="rail.install">Install</b><em data-i18n="rail.installSub">watch it happen</em></span>
+          </li>
+        </ol>
+
+        <div class="s-rail-foot">
+          <span><i class="ph ph-lock-key"></i><span data-i18n="chrome.local">local only</span></span>
+          <a href="https://github.com/RADINMNX2" target="_blank" rel="noreferrer">RADINMNX</a>
+        </div>
+      </nav>
+
+      <main class="s-stage-wrap" id="s-stage-wrap">
+        <div class="s-stages" id="s-stages">
+
+          <!-- 01 welcome -->
+          <section class="s-stage is-active" data-stage="0" aria-labelledby="h-welcome">
+            <div class="s-scroll">
+              <div class="s-welcome">
+                <div class="w-copy">
+                  <span class="s-eyebrow" data-i18n="welcome.kicker">setup · v1.0.0</span>
+                  <h1 id="h-welcome"><span data-i18n="welcome.titlePre">Let's set up</span> <span class="grad">flow.</span> <span data-i18n="welcome.titlePost"></span></h1>
+                  <p class="s-sub" id="welcome-sub" data-i18n="welcome.sub">The local frame-interpolation studio. I'll check the machine, bring the engine with me, and put flow wherever you want it.</p>
+                  <div class="w-chips">
+                    <span class="w-chip"><i class="ph ph-lightning"></i><span data-i18n="welcome.chip1">RIFE 4.26 inside</span></span>
+                    <span class="w-chip"><i class="ph ph-shield-check"></i><span data-i18n="welcome.chip2">no uploads</span></span>
+                    <span class="w-chip"><i class="ph ph-translate"></i><span data-i18n="welcome.chip3">English + فارسی</span></span>
+                  </div>
+                  <div class="w-features">
+                    <div class="w-feat"><i class="ph ph-gauge"></i><b data-i18n="welcome.f1">System check</b><em data-i18n="welcome.f1s">GPU, WebView2, free space</em></div>
+                    <div class="w-feat"><i class="ph ph-cube"></i><b data-i18n="welcome.f2">Engine</b><em data-i18n="welcome.f2s">RIFE 4.26, bundled</em></div>
+                    <div class="w-feat"><i class="ph ph-folder-simple"></i><b data-i18n="welcome.f3">Your files</b><em data-i18n="welcome.f3s">just the app, no leftovers</em></div>
+                  </div>
+                </div>
+
+                <div class="w-art" aria-hidden="true">
+                  <div class="w-orbit"></div>
+                  <div class="w-orbit w-orbit-2"></div>
+                  <span class="w-spark s1"></span><span class="w-spark s2"></span><span class="w-spark s3"></span>
+                  <div class="w-frames">
+                    <div class="w-frame f3"><span>04</span><i></i></div>
+                    <div class="w-frame f2"><span>03</span><i></i></div>
+                    <div class="w-frame f1">
+                      <div class="wf-bar"><b>flow.</b><em>60 fps</em></div>
+                      <svg viewBox="0 0 240 132">
+                        <defs>
+                          <linearGradient id="wfGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0" stop-color="#FF2E4C"></stop>
+                            <stop offset="1" stop-color="#FFB057"></stop>
+                          </linearGradient>
+                        </defs>
+                        <rect class="wf-bg" x="0" y="0" width="240" height="132" rx="10"></rect>
+                        <path class="wf-line" id="wf-path" pathLength="1" d="M10 88 C 30 88, 34 54, 50 54 S 70 96 86 96 S 104 38 122 38 S 142 74 158 74 S 176 50 192 50 S 210 82 230 82"></path>
+                        <circle class="wf-dot" cx="230" cy="82" r="3.2"></circle>
+                        <circle class="wf-run" r="2.4"><animateMotion dur="4.6s" repeatCount="indefinite"><mpath href="#wf-path"></mpath></animateMotion></circle>
+                        <path class="wf-wave" d="M16 116 h18 M40 116 h8 M54 116 h26 M86 116 h12 M104 116 h30 M140 116 h8 M154 116 h40 M200 116 h24"></path>
+                      </svg>
+                    </div>
+                    <span class="w-tag t1"><i class="ph ph-lightning"></i>RIFE 4.26</span>
+                    <span class="w-tag t2"><i class="ph ph-cpu"></i>Vulkan</span>
+                    <span class="w-tag t3"><i class="ph ph-lock-key"></i>local</span>
+                  </div>
+                </div>
+              </div>
+              <div class="w-trust">
+                <span><i class="ph ph-shield-check"></i><span data-i18n="welcome.trust">Everything stays on this machine.</span></span>
+                <span class="w-note" data-i18n="welcome.note">About 25 MB for the app and engine, plus ffmpeg if you need it.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 02 system check -->
+          <section class="s-stage" data-stage="1" aria-labelledby="h-req" hidden>
+            <div class="s-scroll">
+              <div class="s-head-row">
+                <div class="s-head-copy">
+                  <span class="s-eyebrow" data-i18n="req.eyebrow">step 02 · system check</span>
+                  <h1 id="h-req" data-i18n="req.title">Let's see what you've got.</h1>
+                  <p class="s-sub" data-i18n="req.sub">I only check what flow actually needs. Nothing gets installed until you say so.</p>
+                </div>
+                <button class="btn btn-xs btn-ghost s-recheck" id="recheck" type="button"><i class="ph ph-arrows-clockwise"></i><span data-i18n="req.recheck">Check again</span></button>
+              </div>
+
+              <span class="req-scan" id="req-scan" aria-hidden="true"></span>
+              <div class="req-status is-ready" id="req-status">
+                <span class="rs-dot"></span>
+                <span class="rs-txt" id="req-status-txt" data-i18n="req.checking">Checking this machine…</span>
+                <i class="ph ph-circle-notch rs-spin"></i>
+              </div>
+
+              <div class="sys-card" id="sys-card">
+                <div class="sys-cell"><i class="ph ph-monitor"></i><div><em data-i18n="req.os">Windows</em><b id="sys-os">—</b><span id="sys-os-sub">—</span></div></div>
+                <div class="sys-cell"><i class="ph ph-globe-hemisphere-west"></i><div><em data-i18n="req.webview">WebView2</em><b id="sys-wv">—</b><span id="sys-wv-sub">—</span></div></div>
+                <div class="sys-cell"><i class="ph ph-hard-drives"></i><div><em data-i18n="req.disk">Free space</em><b id="sys-disk">—</b><span id="sys-disk-sub">—</span><span class="disk-meter" id="disk-meter" aria-hidden="true"><i></i></span></div></div>
+              </div>
+
+              <div class="req-grid">
+                <article class="scard req-card" id="card-gpu">
+                  <div class="rc-head">
+                    <div class="rc-title"><span class="rc-ic"><i class="ph ph-cpu"></i></span><div><h3 data-i18n="req.gpu">Graphics card</h3><p class="rc-sub" id="gpu-sub">—</p></div></div>
+                    <span class="s-badge is-wait" id="gpu-badge"><i class="ph ph-circle-notch"></i></span>
+                  </div>
+                  <div class="rc-detail" id="gpu-detail">—</div>
+                  <div class="rc-foot"><span class="mini-k"><i class="ph ph-check-circle"></i><span data-i18n="req.vulkan">Vulkan</span></span><b id="gpu-vram">—</b></div>
+                </article>
+
+                <article class="scard req-card" id="card-engine">
+                  <div class="rc-head">
+                    <div class="rc-title"><span class="rc-ic"><i class="ph ph-lightning"></i></span><div><h3 data-i18n="req.engine">RIFE engine</h3><p class="rc-sub" data-i18n="req.engineBundled">Bundled · RIFE 4.26</p></div></div>
+                    <span class="s-badge is-good" id="engine-badge"><i class="ph ph-check"></i></span>
+                  </div>
+                  <div class="rc-detail" data-i18n="req.engineNote">No Flowframes needed. The engine and its weights travel with this setup.</div>
+                  <div class="rc-foot"><span class="mini-k"><i class="ph ph-package"></i><span id="engine-size">17.7 MB</span></span><b>ncnn-vulkan</b></div>
+                </article>
+
+                <article class="scard req-card is-wide" id="card-tools">
+                  <div class="rc-head">
+                    <div class="rc-title"><span class="rc-ic"><i class="ph ph-film-strip"></i></span><div><h3 data-i18n="req.tools">ffmpeg + ffprobe</h3><p class="rc-sub" id="tools-sub" data-i18n="req.checking">Checking this machine…</p></div></div>
+                    <span class="s-badge is-wait" id="tools-badge"><i class="ph ph-circle-notch"></i></span>
+                  </div>
+                  <div class="tool-paths" id="tool-paths"></div>
+                  <div class="tool-modes" id="tool-modes" role="group" aria-label="Video tools"></div>
+                  <div class="tool-actions" id="tool-actions"></div>
+                  <p class="rc-note" id="tool-note" hidden></p>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- 03 options -->
+          <section class="s-stage" data-stage="2" aria-labelledby="h-opt" hidden>
+            <div class="s-scroll">
+              <div class="s-head-row">
+                <div class="s-head-copy">
+                  <span class="s-eyebrow" data-i18n="opt.eyebrow">step 03 · options</span>
+                  <h1 id="h-opt" data-i18n="opt.title">Where should it live?</h1>
+                  <p class="s-sub" id="opt-sub" data-i18n="opt.sub">A folder, two shortcuts, and we're off.</p>
+                </div>
+              </div>
+
+              <button class="opt-folder scard" id="opt-folder" type="button">
+                <span class="of-ic"><i class="ph ph-folder-open"></i></span>
+                <span class="of-main">
+                  <span class="s-eyebrow" data-i18n="opt.folder">Install folder</span>
+                  <b id="opt-path">—</b>
+                  <em data-i18n="opt.folderHint">The app goes here. The engine and tool config live in your local app data.</em>
+                </span>
+                <span class="btn btn-sm btn-secondary of-btn" data-i18n="opt.browse">Browse</span>
+              </button>
+
+              <div class="opt-switches">
+                <div class="scard opt-sw">
+                  <span class="os-ic"><i class="ph ph-desktop"></i></span>
+                  <span class="os-txt"><b data-i18n="opt.desktop">Desktop shortcut</b><em data-i18n="opt.desktopHint">A flow icon, one double-click away.</em></span>
+                  <button class="switch" id="sw-desktop" type="button" role="switch" aria-checked="true" aria-label="Desktop shortcut"><i></i></button>
+                </div>
+                <div class="scard opt-sw">
+                  <span class="os-ic"><i class="ph ph-squares-four"></i></span>
+                  <span class="os-txt"><b data-i18n="opt.start">Start Menu shortcut</b><em data-i18n="opt.startHint">Find it with the rest of your apps.</em></span>
+                  <button class="switch" id="sw-start" type="button" role="switch" aria-checked="true" aria-label="Start Menu shortcut"><i></i></button>
+                </div>
+                <div class="scard opt-sw">
+                  <span class="os-ic"><i class="ph ph-play"></i></span>
+                  <span class="os-txt"><b data-i18n="opt.launch">Open flow when it's done</b><em data-i18n="opt.launchHint">The app starts as soon as the install finishes.</em></span>
+                  <button class="switch" id="sw-launch" type="button" role="switch" aria-checked="true" aria-label="Open after install"><i></i></button>
+                </div>
+              </div>
+
+              <div class="opt-summary scard">
+                <div class="os-head"><h3 data-i18n="opt.summary">What lands on disk</h3><span class="s-badge is-good" id="opt-total-badge">—</span></div>
+                <div class="os-rows">
+                  <div class="os-row"><span><i class="ph ph-app-window"></i><span data-i18n="opt.app">flow app</span></span><b data-i18n="opt.appSize">5.5 MB</b></div>
+                  <div class="os-row"><span><i class="ph ph-cube"></i><span data-i18n="opt.engine">RIFE 4.26 + weights</span></span><b data-i18n="opt.engineSize">17.7 MB</b></div>
+                  <div class="os-row"><span><i class="ph ph-film-strip"></i><span data-i18n="opt.tools">ffmpeg + ffprobe</span></span><b id="opt-tools-size">—</b></div>
+                </div>
+                <p class="os-note" data-i18n="opt.uninstall">You can remove it later from Windows Settings. Tick Delete the application data there to take the bundled engine and tool config with it.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 04 install -->
+          <section class="s-stage" data-stage="3" aria-labelledby="h-inst" hidden>
+            <div class="s-scroll install-scroll">
+              <div class="s-head-row">
+                <div class="s-head-copy">
+                  <span class="s-eyebrow" id="inst-eyebrow" data-i18n="inst.eyebrow">step 04 · install</span>
+                  <h1 id="h-inst" data-i18n="inst.title">Making it real.</h1>
+                  <p class="s-sub" id="inst-sub" data-i18n="inst.sub">Keep this window open for a moment. I'll show every move.</p>
+                </div>
+                <span class="inst-state" id="inst-state"><i class="ph ph-circle-notch"></i><span data-i18n="inst.starting">Starting…</span></span>
+              </div>
+
+              <div class="inst-grid">
+                <div class="inst-hero scard">
+                  <div class="inst-ring" id="inst-ring">
+                    <svg viewBox="0 0 200 200" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="instGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF2E4C"/><stop offset="0.6" stop-color="#FF6A4C"/><stop offset="1" stop-color="#3BE8B0"/></linearGradient>
+                        <linearGradient id="instStageGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3BE8B0"/><stop offset="1" stop-color="#D9FFF3"/></linearGradient>
+                      </defs>
+                      <circle class="ir-track" cx="100" cy="100" r="84"></circle>
+                      <circle class="ir-arc" id="ir-arc" cx="100" cy="100" r="84"></circle>
+                      <circle class="ir-stage-track" cx="100" cy="100" r="69"></circle>
+                      <circle class="ir-stage-arc" id="ir-stage-arc" cx="100" cy="100" r="69"></circle>
+                      <circle class="ir-ticks" cx="100" cy="100" r="96"></circle>
+                      <g class="ir-rot" id="ir-rot"><circle class="ir-head" cx="184" cy="100" r="4"></circle></g>
+                      <g class="ir-stage-rot" id="ir-stage-rot"><circle class="ir-head ir-head-2" cx="169" cy="100" r="3"></circle></g>
+                    </svg>
+                    <div class="ir-center">
+                      <span class="ir-num"><b id="inst-pct">0</b><em>%</em></span>
+                      <span id="inst-stage-label" data-i18n="inst.starting">Starting…</span>
+                      <span class="ir-step" id="inst-step">0 / 5</span>
+                    </div>
+                    <span class="ir-sheen" aria-hidden="true"></span>
+                    <span class="ir-particle p1" aria-hidden="true"></span>
+                    <span class="ir-particle p2" aria-hidden="true"></span>
+                    <span class="ir-particle p3" aria-hidden="true"></span>
+                  </div>
+                  <ol class="inst-stages" id="inst-stages"></ol>
+                </div>
+
+                <div class="inst-log scard">
+                  <div class="il-head">
+                    <span><i class="ph ph-terminal-window"></i><span data-i18n="inst.log">Live log</span></span>
+                    <i class="ph ph-circle-notch il-spin"></i>
+                  </div>
+                  <pre id="inst-log" aria-live="polite"></pre>
+                  <div class="il-foot" id="inst-hint" data-i18n="inst.cancelNote">You can cancel before the app files start.</div>
+                </div>
+              </div>
+
+              <div class="inst-error scard" id="inst-error" hidden>
+                <span class="ie-ic"><i class="ph ph-warning-octagon"></i></span>
+                <div><b id="inst-error-title" data-i18n="done.errorTitle">The install stopped.</b><p id="inst-error-body" data-i18n="done.errorBody"></p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- done -->
+          <section class="s-stage" data-stage="4" aria-labelledby="h-done" hidden>
+            <div class="s-scroll done-scroll">
+              <div class="done-hero">
+                <div class="done-art" id="done-art" aria-hidden="true">
+                  <span class="da-ring r1"></span><span class="da-ring r2"></span>
+                  <span class="da-core"><i class="ph ph-check" id="done-icon"></i></span>
+                  <i class="ph ph-sparkle ds s1"></i><i class="ph ph-sparkle ds s2"></i><i class="ph ph-sparkle ds s3"></i>
+                  <canvas class="done-fx" id="done-fx" width="720" height="420"></canvas>
+                </div>
+                <span class="s-eyebrow" id="done-eyebrow" data-i18n="done.eyebrow">all set</span>
+                <h1 id="h-done" data-i18n="done.title">flow is ready.</h1>
+                <p class="s-sub" id="done-sub" data-i18n="done.sub">Open it, drop a clip, and let it cook.</p>
+
+                <div class="done-card scard">
+                  <div class="dc-row"><span id="done-k1" data-i18n="done.path">Installed at</span><b class="dc-path" id="done-path">—</b></div>
+                  <div class="dc-row"><span id="done-k2" data-i18n="done.version">Version</span><b id="done-version">1.0.0</b></div>
+                  <div class="dc-row"><span id="done-k3" data-i18n="done.engine">Engine</span><b id="done-engine">RIFE 4.26</b></div>
+                  <div class="dc-row"><span id="done-k4" data-i18n="done.tools">ffmpeg</span><b id="done-tools">—</b></div>
+                </div>
+
+                <div class="done-actions">
+                  <button class="btn btn-primary btn-lg btn-beam" id="done-open" type="button"><i class="ph-fill ph-play"></i><span data-i18n="done.open">Open flow</span></button>
+                  <button class="btn btn-secondary btn-lg" id="done-folder" type="button"><i class="ph ph-folder-open"></i><span data-i18n="done.folder">Show folder</span></button>
+                </div>
+                <span class="done-credit">made by <b>RADINMNX</b> · aura studio</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <footer class="s-foot">
+          <span class="s-foot-hint" id="s-foot-hint">Step 1 of 4</span>
+          <div class="s-actions" id="s-actions"></div>
+        </footer>
+      </main>
+    </div>
+  </div>
+</div>
+
+<div class="s-toasts" id="s-toasts" aria-live="polite"></div>
+<div id="s-modal-root"></div>
+<script type="module" src="/setup/setup.js"></script>
+</body>
+</html>

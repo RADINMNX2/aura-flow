@@ -1,0 +1,162 @@
+name: release
+
+# Cut a release: push a v* tag that matches the version in package.json and
+# src-tauri/tauri.conf.json. This worker builds both Windows installers from that
+# tag, verifies the engine it embeds, and publishes them to GitHub Releases.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: Mark the release as a pre-release
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: "22"
+
+jobs:
+  windows:
+    name: build · verify · publish
+    runs-on: windows-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Resolve the version
+        id: ver
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="v$(node -p "require('./package.json').version")"
+          else
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          VER="${TAG#v}"
+          APP_VER="$(node -p "require('./src-tauri/tauri.conf.json').version")"
+          SETUP_VER="$(node -p "require('./setup/src-tauri/tauri.conf.json').version")"
+          PKG_VER="$(node -p "require('./package.json').version")"
+          echo "tag=$TAG" >>"$GITHUB_OUTPUT"
+          echo "version=$VER" >>"$GITHUB_OUTPUT"
+          echo "app=$APP_VER" >>"$GITHUB_OUTPUT"
+          echo "setup=$SETUP_VER" >>"$GITHUB_OUTPUT"
+          echo "pkg=$PKG_VER" >>"$GITHUB_OUTPUT"
+          if [ "$VER" != "$APP_VER" ] || [ "$VER" != "$PKG_VER" ]; then
+            echo "::error::tag $TAG disagrees with package.json ($PKG_VER) / tauri.conf.json ($APP_VER)"
+            exit 1
+          fi
+          echo "building flow $VER (wizard $SETUP_VER)"
+
+      - name: Fetch the pinned RIFE pack
+        shell: bash
+        run: |
+          git fetch --depth 1 origin refs/heads/engine-pack:refs/remotes/origin/engine-pack
+          git checkout origin/engine-pack -- setup/src-tauri/payload
+          ls -l setup/src-tauri/payload
+
+      - name: Verify the engine pack against its sha256 pins
+        shell: bash
+        run: node tools/verify-payload.mjs
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ runner.os }}
+
+      - name: Install frontend deps
+        run: npm ci
+
+      - name: Unit tests + i18n coverage
+        run: |
+          cargo test -p flow-core
+          node tools/check-i18n.mjs
+
+      - name: Build the app + NSIS installer
+        run: npm run build
+
+      - name: Package the aura setup wizard
+        run: node setup/tools/package.mjs
+
+      - name: Collect the release assets
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ver = "${{ steps.ver.outputs.version }}"
+          New-Item -ItemType Directory -Force dist-release | Out-Null
+          Copy-Item "target/release/bundle/nsis/flow_${ver}_x64-setup.exe" dist-release/
+          Copy-Item "release/flow-setup-${ver}-windows-x64.exe" dist-release/
+          Get-ChildItem dist-release -File | ForEach-Object {
+            "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name
+          } | Set-Content -Encoding ascii dist-release/SHA256.txt
+          Get-Content dist-release/SHA256.txt
+          Get-ChildItem dist-release | Format-Table Name, Length
+
+
+      - name: Write the release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          VER="${{ steps.ver.outputs.version }}"
+          cat > notes.md <<EOF
+          ## flow $VER
+
+          A local frame-interpolation studio: RIFE on your GPU, an aura UI, and nothing uploaded anywhere.
+
+          | File | Pick this if |
+          | --- | --- |
+          | \`flow-setup-${VER}-windows-x64.exe\` | **recommended** - the aura wizard: checks WebView2/GPU/disk, carries RIFE 4.26, finds or downloads ffmpeg, then installs, repairs or uninstalls |
+          | \`flow_${VER}_x64-setup.exe\` | you only want the app and will supply your own engine |
+
+          Both are \`Windows x64\`, **unsigned** - SmartScreen will ask once (*More options -> Run anyway*).
+
+          \`\`\`
+          $(cat dist-release/SHA256.txt)
+          \`\`\`
+
+          Full docs: [README](https://github.com/RADINMNX2/aura-flow#readme) · built by [RADINMNX](https://github.com/RADINMNX2)
+          EOF
+          cat notes.md
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          VER: ${{ steps.ver.outputs.version }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          FLAGS=(--latest)
+          if [ "${PRERELEASE:-false}" = "true" ]; then FLAGS+=(--prerelease); fi
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "release $TAG already exists - refreshing its body and assets"
+            gh release edit "$TAG" --notes-file notes.md "${FLAGS[@]}" || true
+          else
+            gh release create "$TAG" --title "flow $VER" --notes-file notes.md "${FLAGS[@]}"
+          fi
+          gh release upload "$TAG" dist-release/* --clobber
+          gh release view "$TAG" --json tagName,isLatest,assets --jq '{tag:.tagName,latest:.isLatest,assets:[.assets[].name]}'
+
+      - name: Keep the build outputs as workflow artifacts too
+        uses: actions/upload-artifact@v4
+        with:
+          name: flow-${{ steps.ver.outputs.version }}-windows-x64
+          path: dist-release/*
+          if-no-files-found: error

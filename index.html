@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="author" content="RADINMNX" />
+<meta name="description" content="flow. - a local frame interpolation studio. Your clips never leave the machine." />
+<meta name="theme-color" content="#08070B" />
+<title>flow. frame interpolation studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2308070B'/><path d='M7 16h4l3-7 4 14 3-7h4' stroke='%23FF2E4C' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+<link rel="stylesheet" href="assets/phosphor/regular/style.css" />
+<link rel="stylesheet" href="assets/phosphor/fill/style.css" />
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/kit-controls.css" />
+<link rel="stylesheet" href="css/kit-instruments.css" />
+<link rel="stylesheet" href="css/wizard.css" />
+<link rel="stylesheet" href="css/overlays.css" />
+<link rel="stylesheet" href="css/legibility.css" />
+<link rel="stylesheet" href="css/rtl.css" />
+</head>
+<body>
+<div class="atmos" aria-hidden="true">
+  <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+  <i class="grain"></i>
+  <i class="vignette"></i>
+</div>
+
+<div class="app" id="app">
+  <header class="chrome">
+    <div class="brand">
+      <span class="brand-mark"><i class="ph-fill ph-waveform"></i></span>
+      <span class="brand-text">flow<i class="dot">.</i></span>
+    </div>
+
+    <nav class="wiz-steps" id="wiz-steps" aria-label="Steps" data-i18n-aria="nav.aria">
+      <i class="wst-ind" id="wst-ind" aria-hidden="true"></i>
+      <button class="wst is-now" type="button" data-step="0" aria-current="step" aria-label="Source" data-i18n-aria="nav.source">
+        <span class="wst-dot"><i class="ph ph-film-strip wst-ico"></i><i class="ph ph-check wst-ck"></i></span>
+        <span class="wst-txt"><b data-i18n="nav.source">Source</b><em id="wst-sub-0">pick a clip</em></span>
+      </button>
+      <button class="wst" type="button" data-step="1" aria-label="Recipe" data-i18n-aria="nav.recipe">
+        <span class="wst-dot"><i class="ph ph-sliders-horizontal wst-ico"></i><i class="ph ph-check wst-ck"></i></span>
+        <span class="wst-txt"><b data-i18n="nav.recipe">Recipe</b><em id="wst-sub-1">engine and factor</em></span>
+      </button>
+      <button class="wst" type="button" data-step="2" aria-label="Render" data-i18n-aria="nav.render">
+        <span class="wst-dot"><i class="ph ph-gauge wst-ico"></i><i class="ph ph-check wst-ck"></i></span>
+        <span class="wst-txt"><b data-i18n="nav.render">Render</b><em id="wst-sub-2">run and compare</em></span>
+      </button>
+    </nav>
+
+    <div class="chrome-right">
+      <div class="strip" id="gpu-strip" aria-label="Machine status" data-i18n-aria="chrome.machine">
+        <span class="strip-row" data-tip="GPU load, live from the driver" data-i18n-tip="tip.gpuLoad">
+          <i class="ph ph-cpu"></i><span class="meter cy" style="--p:0"><i></i></span><span class="strip-v" id="gpu-util">0%</span>
+        </span>
+        <i class="strip-div" aria-hidden="true"></i>
+        <span class="strip-row" data-tip="VRAM in use / installed" data-i18n-tip="tip.vram">
+          <i class="ph ph-memory"></i><span class="meter neutral" style="--p:0"><i></i></span><span class="strip-v" id="gpu-vram">1.2 / 8 GB</span>
+        </span>
+        <i class="strip-div" aria-hidden="true"></i>
+        <span class="strip-row is-temp" data-tip="GPU temperature" data-i18n-tip="tip.gpuTemp">
+          <i class="ph ph-thermometer"></i><span class="strip-v" id="gpu-temp">44&deg;C</span>
+        </span>
+      </div>
+      <button class="lang-btn" id="btn-lang" type="button" aria-label="Language" data-tip="Switch language (EN / فارسی) · RTL flips the whole app" data-i18n-tip="tip.lang">
+        <i class="ph ph-translate"></i><span id="lang-cur">EN</span>
+      </button>
+      <span class="core-pill" id="core-pill" data-tip="The Rust core that runs the pipeline. Mock means the browser dev harness is answering." data-i18n-tip="tip.core.mock"><span class="dot"></span><span class="core-txt" id="core-txt">core: mock</span></span>
+      <button class="icon-btn" id="btn-settings" type="button" aria-label="Settings" data-tip="Engine folders, temp policy, defaults" data-i18n-tip="tip.settings" data-i18n-aria="set.title"><i class="ph ph-gear-six"></i></button>
+    </div>
+  </header>
+
+  <main class="wiz">
+    <div class="wiz-scroll" id="wiz-scroll">
+      <div class="wiz-inner" id="wiz-inner">
+
+        <section class="pane" id="pane-source" data-pane="0" aria-labelledby="h-source">
+          <div class="pane-head">
+            <div>
+              <h1 id="h-source" data-i18n="src.title">Choose a clip</h1>
+              <p data-i18n="src.sub">Local file. Nothing is uploaded, everything runs on this machine.</p>
+            </div>
+            <span class="badge badge-dashed" id="src-badge" hidden></span>
+          </div>
+
+          <div class="dz-hero spotlight" id="dz" role="button" tabindex="0" aria-label="Drop a video file or browse" data-i18n-aria="tip.drop" data-ctx="source">
+            <div class="dz-art">
+              <svg class="dz-svg" viewBox="0 0 320 200" aria-hidden="true">
+                <rect class="dz-frame" x="1.5" y="1.5" width="317" height="197" rx="16" pathLength="100" />
+                <g class="dz-reel">
+                  <circle cx="160" cy="96" r="46" />
+                  <circle cx="160" cy="96" r="33" />
+                  <path d="M160 50 v-12 M160 142 v12 M114 96 h-12 M206 96 h12" />
+                  <circle class="dz-reel-dot" cx="160" cy="80" r="4.6" />
+                  <circle class="dz-reel-dot" cx="174" cy="104" r="4.6" />
+                  <circle class="dz-reel-dot" cx="146" cy="104" r="4.6" />
+                </g>
+                <g class="dz-framelets">
+                  <rect x="30" y="150" width="34" height="24" rx="4" />
+                  <rect x="70" y="150" width="34" height="24" rx="4" />
+                  <rect x="110" y="150" width="34" height="24" rx="4" />
+                  <rect x="150" y="150" width="34" height="24" rx="4" />
+                </g>
+                <line class="dz-scan" x1="14" y1="24" x2="306" y2="24" />
+              </svg>
+            </div>
+            <div class="dz-main">
+              <div class="dz-copy-wrap">
+                <div class="dz-copy dz-idle-copy">
+                  <span class="dz-kicker" data-i18n="src.dzKicker">drag anywhere</span>
+                  <b class="dz-title" data-i18n="src.drop">Drop a video</b>
+                  <span class="dz-sub" data-i18n="src.subLine">mp4, mkv, mov, webm, or a folder of numbered frames. Nothing leaves this machine.</span>
+                </div>
+                <div class="dz-copy dz-over-copy" aria-hidden="true">
+                  <span class="dz-kicker" data-i18n="src.overKicker">release to import</span>
+                  <b class="dz-title" data-i18n="src.overTitle">Let it go</b>
+                  <span class="dz-sub" data-i18n="src.overSub">It starts reading the moment it lands.</span>
+                </div>
+              </div>
+              <div class="dz-acts">
+                <button class="btn btn-primary btn-beam" id="btn-open" type="button">
+                  <span class="btn-label"><i class="ph ph-folder-open"></i><span data-i18n="src.browse">Browse files</span></span>
+                </button>
+                <span class="dz-or" data-i18n-html="src.or">or press <kbd>Ctrl</kbd><kbd>O</kbd></span>
+              </div>
+              <div class="dz-foot">
+                <span class="chip" data-i18n="src.chipLocal">local only</span><span class="chip" data-i18n="src.chip4k">up to 4K</span><span class="chip" data-i18n="src.chipAudio">audio + subs carried</span>
+              </div>
+            </div>
+            <div class="dz-flow" aria-hidden="true">
+              <span><b>1</b><span data-i18n="src.flowProbe">Probe</span><em data-i18n="src.flowProbeSub">frames and streams</em></span>
+              <i class="dz-flow-ln"></i>
+              <span><b>2</b><span data-i18n="src.flowRecipe">Recipe</span><em data-i18n="src.flowRecipeSub">engine, model, factor</em></span>
+              <i class="dz-flow-ln"></i>
+              <span><b>3</b><span data-i18n="src.flowRender">Render</span><em data-i18n="src.flowRenderSub">local, on this GPU</em></span>
+            </div>
+          </div>
+
+          <div id="src-card" data-ctx="source" hidden></div>
+
+          <div class="pane-actions">
+            <span class="hint-line" id="src-hint" data-i18n="src.wait">Waiting for a clip.</span>
+            <button class="btn btn-secondary btn-arrow" id="to-recipe" type="button" disabled>
+              <span class="btn-label"><span data-i18n="src.next">Build a recipe</span><i class="ph ph-arrow-right"></i></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="pane" id="pane-recipe" data-pane="1" aria-labelledby="h-recipe" data-ctx="recipe" hidden>
+          <div class="pane-head">
+            <div>
+              <h1 id="h-recipe" data-i18n="rcp.title">Recipe</h1>
+              <p data-i18n="rcp.sub">One engine, one model, one factor. Every number below is computed.</p>
+            </div>
+            <button class="btn btn-xs btn-ghost" id="btn-recipe-reset" type="button" data-tip="Restore the house recipe: RIFE 4×, quality 78, H.264, slow preset." data-i18n-tip="tip.recommended"><i class="ph ph-arrow-counter-clockwise"></i><span data-i18n="rcp.recommended">Recommended</span></button>
+          </div>
+
+          <div class="rcp-grid" id="rcp-grid"></div>
+
+          <div class="pane-actions">
+            <button class="btn btn-ghost btn-sm" id="back-to-source" type="button"><i class="ph ph-arrow-left"></i><span data-i18n="rcp.back">Back</span></button>
+            <span class="hint-line" id="recipe-hint"></span>
+            <button class="btn btn-primary btn-lg btn-beam" id="to-render" type="button">
+              <span class="btn-label"><i class="ph-fill ph-play"></i><span data-i18n="rcp.start">Start render</span></span>
+              <kbd>Enter</kbd>
+            </button>
+          </div>
+        </section>
+
+        <section class="pane" id="pane-render" data-pane="2" aria-labelledby="h-render" data-ctx="render" hidden>
+          <div class="pane-head">
+            <div>
+              <h1 id="h-render" data-i18n="run.title">Render</h1>
+              <p id="render-sub" data-i18n="run.sub">Pick a clip, then a recipe.</p>
+            </div>
+            <div class="run-head-right">
+              <span class="eta" id="run-eta" hidden></span>
+              <button class="btn btn-xs btn-danger" id="btn-cancel" type="button" hidden data-tip="Stops the job. Frames already written are kept for a resume." data-i18n-tip="tip.cancel"><i class="ph ph-stop"></i><span data-i18n="run.cancel">Cancel</span></button>
+            </div>
+          </div>
+
+          <div class="run-top">
+            <div class="ring" id="ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Overall progress" data-i18n-aria="run.ringAria" data-tip="Overall progress across all five stages." data-i18n-tip="tip.ring">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <defs>
+                  <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#FF2E4C" /><stop offset="0.55" stop-color="#FF6A4C" /><stop offset="1" stop-color="#FFB057" />
+                  </linearGradient>
+                  <linearGradient id="ringGradDone" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#1FA97C" /><stop offset="1" stop-color="#3BE8B0" />
+                  </linearGradient>
+                </defs>
+                <circle class="ring-track" cx="100" cy="100" r="82" />
+                <circle class="ring-arc" id="ring-arc" cx="100" cy="100" r="82" />
+                <g class="ring-rot" id="ring-rot">
+                  <circle class="ring-head" id="ring-head" cx="182" cy="100" r="4.2" />
+                </g>
+                <circle class="ring-ticks" id="ring-ticks" cx="100" cy="100" r="94" />
+              </svg>
+              <div class="ring-center">
+                <span class="ring-pct"><b id="ring-pct">0</b><em>%</em></span>
+                <span class="ring-stage" id="ring-stage" data-i18n="run.idle">idle</span>
+              </div>
+            </div>
+
+            <div class="run-side">
+              <div class="steps" id="steps" role="list" data-tip="Probe → extract → interpolate → encode → mux. Each node fills as its stage runs." data-i18n-tip="tip.runSteps"></div>
+              <div class="run-stats" id="run-stats"></div>
+              <div class="spark-wrap" data-tip="Measured writing rate. This is real throughput, not an animation." data-i18n-tip="tip.spark">
+                <span class="spark-k" data-i18n="run.spark">frames / sec</span>
+                <span class="spark" id="spark" aria-hidden="true"></span>
+              </div>
+              <div class="run-actions">
+                <button class="btn btn-ghost btn-sm" id="back-to-recipe" type="button"><i class="ph ph-arrow-left"></i><span data-i18n="run.back">Recipe</span></button>
+                <span class="hint-line" id="run-hint" data-i18n="run.ready">Ready.</span>
+                <button class="btn btn-primary btn-lg btn-beam" id="btn-run" type="button" data-tip="Runs locally on your GPU. Nothing is uploaded." data-i18n-tip="tip.start">
+                  <span class="btn-label"><i class="ph-fill ph-play"></i><span id="btn-run-txt" data-i18n="run.start">Start render</span></span>
+                  <kbd>Enter</kbd>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmp-wrap" id="cmp-wrap" data-ctx="compare">
+            <div class="cmp-head">
+              <h2><i class="ph ph-columns"></i><span data-i18n="cmp.title">Compare</span></h2>
+              <div class="cmp-tools">
+                <span class="seg" id="cmp-mode" role="radiogroup" aria-label="Viewer mode" data-i18n-aria="cmp.mode"></span>
+                <button class="btn btn-xs btn-secondary" id="btn-reveal" type="button" hidden data-tip="Open the output folder." data-i18n-tip="tip.reveal"><i class="ph ph-export"></i><span data-i18n="cmp.show">Show file</span></button>
+              </div>
+            </div>
+            <div class="cmp-body">
+              <div class="cmp-main">
+                <div class="cmp is-empty" id="cmp" data-tip="The output against the original, frame-locked." data-i18n-tip="tip.compare">
+                  <div class="cmp-es" id="cmp-es">
+                    <i class="ph ph-film-strip"></i>
+                    <span data-i18n="cmp.emptyTitle">Nothing to compare yet</span>
+                    <em data-i18n="cmp.emptyBody">Start a render and the result lands here, side by side with the source.</em>
+                  </div>
+                  <div class="cmp-stage" id="cmp-stage" hidden>
+                    <video class="cmp-v" id="v-a" muted playsinline preload="metadata"></video>
+                    <div class="cmp-slab" id="cmp-slab"><video class="cmp-v" id="v-b" muted playsinline preload="metadata"></video></div>
+                    <div class="cmp-handle" id="cmp-handle" role="slider" tabindex="0" aria-label="Split position" data-i18n-aria="cmp.handle" data-tip="Drag to reveal. Arrow keys nudge it 4% at a time." data-i18n-tip="tip.split" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i class="ln"></i><em class="ph ph-arrows-left-right"></em></div>
+                    <span class="cmp-tag a" id="tag-a" data-i18n="cmp.tagSourcePlain">source</span>
+                    <span class="cmp-tag b" id="tag-b" data-i18n="cmp.tagFlowPlain">flow</span>
+                  </div>
+                </div>
+                <div class="scrub" id="scrub" data-tip="Click the waveform to jump. The bars are real measured motion." data-i18n-tip="tip.scrub">
+                  <button class="icon-btn sm" id="btn-play" type="button" aria-label="Play both" data-i18n-aria="cmp.play" data-tip="Plays source and result together, kept in sync." data-i18n-tip="tip.play" disabled><i class="ph-fill ph-play"></i></button>
+                  <span class="wave" id="wave" aria-hidden="true"></span>
+                  <span class="scrub-t num" id="scrub-t">0:00.0 / 0:00.0</span>
+                </div>
+              </div>
+              <aside class="cmp-side" id="cmp-side" hidden></aside>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="dock" id="p-journal" aria-labelledby="h-journal">
+    <div class="dock-head">
+      <h2 id="h-journal"><i class="ph ph-terminal-window"></i><span data-i18n="j.title">Journal</span></h2>
+      <span class="dock-lines" id="journal-count">0 lines</span>
+      <a class="dock-credit" id="dock-credit" href="https://github.com/RADINMNX2" target="_blank" rel="noreferrer" data-tip="Built by RADINMNX — aura UI, flow-core, Tauri 2" data-i18n-tip="tip.credit"><i class="ph ph-heart"></i><span>RADINMNX</span></a>
+      <button class="btn btn-xs btn-ghost dock-about" id="btn-about" type="button" aria-label="About flow." data-i18n-aria="about.title" data-tip="Version, credits and the stack." data-i18n-tip="tip.about"><i class="ph ph-info"></i></button>
+      <button class="btn btn-xs btn-ghost" id="btn-journal" type="button" aria-expanded="false" aria-controls="journal-body" data-tip="Journal|Every stage and every core message, timestamped." data-i18n-tip="tip.journal"><i class="ph ph-caret-up"></i><span data-i18n="j.open">open</span></button>
+    </div>
+    <div class="dock-body" id="journal-body" hidden><pre class="journal" id="journal"></pre></div>
+  </footer>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+<div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+<div id="modal-root"></div>
+<div id="palette-root"></div>
+<div id="ctx-root"></div>
+<input type="file" id="file-input" name="file" aria-label="Video file" accept="video/*,.mkv,.mov,.webm,.avi" hidden />
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

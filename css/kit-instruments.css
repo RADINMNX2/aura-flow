@@ -1,0 +1,92 @@
+/* flow. layer 3b - instruments: aurora hero, stages rail, slots, runners, spark */
+
+/* ── aurora: the one determinate hero of the run region. Known total, continuous motion. ──
+   Integer line-heights and no fractional centering: this renders on a 1x 1080p panel. */
+.aurora { --p: 0; position: relative; height: 44px; border-radius: var(--r-pill); border: 1px solid var(--line-2); background: rgba(255,255,255,0.065); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -10px 22px rgba(0,0,0,0.28); overflow: hidden; }
+.aurora-fill { position: absolute; inset: 0; transform-origin: left center; transform: scaleX(calc(var(--p) * 0.01)); background: linear-gradient(90deg, #8E0A1D, #D31332 34%, #FF2E4C 62%, #FF6A4C 84%, #FFB057); transition: transform 0.42s var(--ease); }
+.aurora-fill::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent); background-size: 42% 100%; background-repeat: no-repeat; opacity: 0; }
+.aurora.is-run .aurora-fill::after { opacity: 1; animation: aurora-sweep 2.1s linear infinite; }
+@keyframes aurora-sweep { from { background-position: -45% 0; } to { background-position: 145% 0; } }
+.aurora-head { position: absolute; top: 4px; bottom: 4px; left: 0; width: 3px; border-radius: 99px; background: #FFF3F5; box-shadow: 0 0 12px 3px rgba(255,46,76,0.75), 0 0 26px 10px rgba(255,46,76,0.28); transform: translateX(calc(var(--p) * 1cqi)); transition: transform 0.42s var(--ease), opacity var(--t) var(--ease); opacity: 0; }
+.aurora.is-run .aurora-head, .aurora.is-done .aurora-head { opacity: 1; }
+.aurora.is-done .aurora-head { box-shadow: 0 0 12px 3px rgba(59,232,176,0.7), 0 0 26px 10px rgba(59,232,176,0.24); }
+.aurora.is-done .aurora-fill { background: linear-gradient(90deg, #0E6B52, #1FA97C 46%, #3BE8B0); }
+.aurora-lbl { position: absolute; left: 14px; top: 0; height: 100%; display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 14px; color: rgba(255,255,255,0.72); text-shadow: 0 1px 6px rgba(0,0,0,0.5); }
+.aurora-pct { position: absolute; right: 16px; top: 0; height: 42px; line-height: 42px; font-family: var(--font-mono); font-size: 17px; font-weight: 500; letter-spacing: -0.02em; color: #fff; text-shadow: 0 1px 9px rgba(0,0,0,0.6); font-variant-numeric: tabular-nums; }
+.aurora:not(.is-run):not(.is-done) .aurora-pct { color: var(--ink-3); text-shadow: none; }
+@supports not (width: 1cqi) { .aurora-head { display: none; } }
+
+/* ── stages rail: named pipeline phases; groove spans node-centre to node-centre ── */
+.rail { position: relative; padding-top: 2px; }
+.rail-groove { position: absolute; left: calc(100% / 12); right: calc(100% / 12); top: 18.5px; height: 3px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.rail-fill { position: absolute; inset: 0; transform: scaleX(calc(var(--p) * 0.01)); transform-origin: left center; background: linear-gradient(90deg, var(--mint), var(--accent)); transition: transform 0.42s var(--ease); }
+.rail-spark { position: absolute; top: 0; bottom: 0; left: 0; width: 16%; border-radius: inherit; opacity: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent); }
+.rail.is-run .rail-spark { opacity: 1; animation: rail-spark 1.9s var(--ease) infinite; }
+@keyframes rail-spark { 0% { transform: translateX(-100%); } 100% { transform: translateX(620%); } }
+
+.steps { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; text-align: center; outline: none; }
+.step-node { position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #0E0B11; border: 1px solid var(--line-2); color: var(--ink-3); transition: background-color var(--t-slow) var(--ease), border-color var(--t-slow) var(--ease), color var(--t-slow) var(--ease), box-shadow var(--t-slow) var(--ease); }
+.step-node > i { grid-area: 1 / 1; font-size: 16px; transition: opacity 0.26s var(--ease), transform 0.3s var(--spring); }
+.step-node .tick, .step-node .skip { opacity: 0; transform: scale(0.4) rotate(-28deg); }
+.step-node .tick { color: var(--mint); }
+.step:hover .step-node { background: #161019; }
+.step:focus-visible .step-node { outline: 2px solid var(--accent); outline-offset: 4px; }
+.halo { display: none; position: absolute; inset: -5px; border-radius: 50%; opacity: 0; pointer-events: none; background: conic-gradient(from 0deg, transparent 0 58%, rgba(255,46,76,0.95) 88%, transparent 100%); mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px)); transition: opacity 0.25s var(--ease); }
+.step-lbl { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; line-height: 16px; color: var(--ink-3); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--t) var(--ease); }
+.step-meta { font-family: var(--font-mono); font-size: 11px; line-height: 14px; color: var(--ink-3); min-height: 14px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.step.is-done .step-node { background: #16241F; border-color: rgba(59,232,176,0.45); color: var(--mint); }
+.step.is-done .ico { opacity: 0; transform: scale(0.4); }
+.step.is-done .tick { opacity: 1; transform: none; }
+.step.is-done .step-lbl { color: var(--ink-2); }
+.step.is-done .step-meta { color: var(--mint); }
+.step.is-now .step-node { background: linear-gradient(180deg, #FF5068, #D31332); border-color: transparent; color: #170609; box-shadow: 0 6px 18px rgba(255,46,76,0.34); }
+.step-node::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; pointer-events: none; opacity: 0;
+  background: conic-gradient(var(--accent) calc(var(--np, 0) * 1%), transparent 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+  transition: opacity 0.22s var(--ease); }
+.step.is-now .step-node::after { opacity: 1; }
+.step.is-done .step-node { animation: node-pop 0.46s var(--spring); }
+@keyframes node-pop { 38% { transform: scale(1.16); } }
+.steps-head { position: absolute; top: 14px; left: calc(10% + 80% * var(--sp, 0) / 100); width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px 3px rgba(255,46,76,0.55), 0 0 26px 8px rgba(255,46,76,0.22); opacity: 0; transition: left 0.5s var(--ease), opacity 0.25s var(--ease); pointer-events: none; z-index: 2; }
+.steps.is-live .steps-head { opacity: 1; }
+.step.is-now .step-lbl { color: var(--ink); }
+.step.is-now .step-meta { color: #FF8DA0; }
+@keyframes halo-spin { to { transform: rotate(360deg); } }
+.step.is-bad .step-node { background: #251C15; border-color: rgba(255,176,87,0.5); color: var(--amber); }
+.step.is-bad .step-meta { color: rgba(255,176,87,0.86); }
+/* refused, not failed: a skipped stage must never borrow the mint of a done one */
+.step.is-skip .step-node { background: #14101A; border-style: dashed; border-color: rgba(255,176,87,0.42); color: var(--ink-3); }
+.step.is-skip .ico { opacity: 0; transform: scale(0.4); }
+.step.is-skip .skip { opacity: 1; transform: none; color: var(--amber); }
+.step.is-skip .step-meta { color: rgba(255,176,87,0.82); }
+
+/* ── slots: countable chunks (frame blocks, batch files) ── */
+.slots { display: flex; gap: 3px; }
+.slots i { flex: 1 1 0; min-width: 0; height: 22px; border-radius: 5px; background: rgba(255,255,255,0.065); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); transition: background 0.26s var(--ease) calc(var(--i, 0) * 11ms), box-shadow 0.26s var(--ease) calc(var(--i, 0) * 11ms), transform 0.2s var(--ease); }
+.slots i.is-on { background: linear-gradient(180deg, #FF5C77, #D40F2E); box-shadow: 0 0 10px rgba(255,46,76,0.45); }
+.slots i.is-done { background: linear-gradient(180deg, #46F0BC, #1FA97C); box-shadow: 0 0 10px rgba(59,232,176,0.35); }
+.slots.is-live i.is-head { animation: slot-pulse 1.1s ease-in-out infinite; }
+@keyframes slot-pulse { 50% { transform: scaleY(0.55); opacity: 0.75; } }
+
+/* ── runners: indeterminate. must never print a percentage ── */
+.runners { width: 100%; display: grid; gap: 6px; }
+.gp-lane { position: relative; height: 20px; border-radius: 99px; background: rgba(255,255,255,0.055); box-shadow: inset 0 1px 2px rgba(0,0,0,0.45); overflow: hidden; }
+.gp-seg { position: absolute; top: 0; left: 0; height: 100%; width: 32%; border-radius: 99px; background: linear-gradient(90deg, transparent, var(--c, #FF2E4C) 35%, var(--c2, #FF8DA0) 60%, transparent); box-shadow: 0 0 14px var(--glow, rgba(255,46,76,0.5)); animation: gp-run var(--dur, 1.6s) linear infinite; }
+@keyframes gp-run { 0% { transform: translateX(-100%); } 100% { transform: translateX(312%); } }
+.gp-cyan { --c: #38D4FF; --c2: #B6F0FF; --glow: rgba(56,212,255,0.45); }
+.gp-amber { --c: #FFB057; --c2: #FFDCAE; --glow: rgba(255,176,87,0.42); }
+.gp-white { --c: #CFC8CE; --c2: #fff; --glow: rgba(255,255,255,0.28); }
+.gp-lane.is-static { overflow: hidden; }
+.gp-lane.is-static .gp-seg { width: var(--w, 0%); animation: none; transform: none; box-shadow: none; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+.gp-lane.is-static.is-ok .gp-seg { background: linear-gradient(90deg, #1FA97C, var(--mint)); }
+
+/* ── spark: rolling frames/sec history, newest pinned right ── */
+.spark-wrap { display: flex; align-items: flex-end; gap: 10px; min-width: 0; }
+.spark-k { font-family: var(--font-mono); font-size: 11px; font-weight: 500; line-height: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 5px; white-space: nowrap; }
+.spark { position: relative; height: 28px; flex: 1; min-width: 0; border-bottom: 1px solid var(--line); }
+.spark svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.spark-line { fill: none; stroke: var(--accent); stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(255,46,76,0.35)); }
+.spark-area { fill: url(#sparkFill); }
+.spark-head { position: absolute; left: 0; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: #fff; box-shadow: 0 0 9px 2px rgba(255,46,76,0.75); transform: translate(-50%, -50%); transition: left 0.3s linear, top 0.3s linear, opacity 0.2s var(--ease); }

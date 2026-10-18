@@ -1,0 +1,23 @@
+[package]
+name = "flow-setup"
+version = "1.0.0"
+edition = "2021"
+description = "flow. setup - the aura installer"
+authors = ["RADINMNX"]
+license = "MIT"
+
+[features]
+# Production builds must enable this so Tauri embeds frontendDist instead of devUrl.
+custom-protocol = ["tauri/custom-protocol"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rfd = "0.15"
+winreg = "0.52"
+fs2 = "0.4"
+flow-core = { path = "../../crates/flow-core" }

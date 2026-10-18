@@ -1,0 +1,32 @@
+{
+  "name": "flow-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "flow. - a local frame interpolation studio (aura UI + Rust core)",
+  "author": "RADINMNX (https://github.com/RADINMNX2)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RADINMNX2/aura-flow"
+  },
+  "scripts": {
+    "dev": "node server.mjs",
+    "app": "tauri dev",
+    "build": "tauri build",
+    "dist": "node tools/build-dist.mjs",
+    "vendor": "node tools/vendor.mjs",
+    "test:core": "cargo test -p flow-core",
+    "test:real": "cargo test -p flow-core --test real_media -- --ignored --nocapture",
+    "check:i18n": "node tools/check-i18n.mjs",
+    "setup:dev": "node setup/dev.mjs",
+    "setup:dist": "node setup/tools/build.mjs",
+    "setup:package": "node setup/tools/package.mjs"
+  },
+  "devDependencies": {
+    "@phosphor-icons/web": "^2.1.1",
+    "@tauri-apps/cli": "^2.12.3",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.27"
+  }
+}

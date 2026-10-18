@@ -1,0 +1,26 @@
+/* flow. layer 6 (last) - legibility floor and motion opt-out. Overrides everything above. */
+
+/* Nothing may sit under the 11px floor on a 1x panel, and nothing may be centered on a half pixel. */
+:root { font-size: 16px; }
+.brand-sub, .strip-row b, .step-lbl, .step-meta, .fact b, .rcp-k, .spark-k, .aurora-lbl, .cmp-tag, .pal-g, .journal, .dz-s, .src-path, .t-body span, .m-set em, .rcp-note, .pal-foot, .kbd-hint { text-rendering: optimizeLegibility; }
+
+.fact span, .stat span, .strip-v, .scrub-t, .eta, .aurora-pct, .stp output, .f-trail { font-variant-numeric: tabular-nums; }
+
+/* muted text must stay above 4.5:1 on near-black */
+.dim, .dz-s, .step-lbl, .fact b, .rcp-k, .spark-k { color: var(--ink-3); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .atmos .blob { animation: none; }
+  .aurora.is-run .aurora-fill::after, .rail.is-run .rail-spark { animation: none; opacity: 0; }
+  .btn-beam::before { animation: none; }
+}
+
+@media (prefers-contrast: more) {
+  :root { --line: rgba(255,255,255,0.16); --line-2: rgba(255,255,255,0.28); --ink-3: #A7A0A8; }
+}

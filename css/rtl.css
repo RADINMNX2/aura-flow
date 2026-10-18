@@ -1,0 +1,129 @@
+/* flow. layer 7 - RTL corrections. Everything that is genuinely directional lives here;
+   the layout itself flips from the document direction. Loaded last. */
+
+html[dir="rtl"] .wst-txt,
+html[dir="rtl"] .cbx-v,
+html[dir="rtl"] .cbx-o,
+html[dir="rtl"] .codec,
+html[dir="rtl"] .pal-o,
+html[dir="rtl"] .tip,
+html[dir="rtl"] .ctx-o { text-align: start; }
+
+html[dir="rtl"] .strip-v { text-align: end; }
+
+/* keep file paths and machine numbers readable left-to-right inside RTL prose */
+html[dir="rtl"] .src-path,
+html[dir="rtl"] .side-file,
+html[dir="rtl"] .journal,
+html[dir="rtl"] .strip-v,
+html[dir="rtl"] .scrub-t { direction: ltr; text-align: left; unicode-bidi: isolate; }
+html[dir="rtl"] .src-path, html[dir="rtl"] .side-file { text-align: right; }
+
+/* inline padding/margins that were physical */
+html[dir="rtl"] .pane-actions .hint-line,
+html[dir="rtl"] .run-actions .hint-line { margin-right: 0; margin-inline-end: auto; }
+html[dir="rtl"] .engine-sum .badge,
+html[dir="rtl"] .qbar-top .qbar-k,
+html[dir="rtl"] .pal-o .pal-h,
+html[dir="rtl"] .cbx-ck,
+html[dir="rtl"] .btn > kbd { margin-left: 0; margin-inline-start: auto; }
+html[dir="rtl"] .btn > kbd { margin-inline-start: 2px; }
+html[dir="rtl"] .rcp-card-head h3 i { margin-right: 0; margin-inline-end: 6px; }
+html[dir="rtl"] .fsum-item + .fsum-item { padding-left: 0; padding-inline-start: 12px; border-left: 0; border-inline-start: 1px solid var(--line); }
+html[dir="rtl"] .frail-big { padding-right: 0; padding-inline-end: 2px; }
+html[dir="rtl"] .codec .ck { right: auto; left: 8px; }
+html[dir="rtl"] .cbx-o.is-act { box-shadow: inset -2px 0 0 var(--accent); }
+html[dir="rtl"] .cbx-pop { transform-origin: top right; }
+
+/* numeric controls stay LTR so ticks, fill and scale always line up */
+html[dir="rtl"] .frail,
+html[dir="rtl"] .qbar { direction: ltr; }
+html[dir="rtl"] .frail-range,
+html[dir="rtl"] .qbar-range,
+html[dir="rtl"] .sl { direction: ltr; }
+html[dir="rtl"] .frail-out { direction: rtl; }
+
+/* switch: the knob starts on the right and travels left */
+html[dir="rtl"] .switch::after { left: auto; right: 3px; }
+html[dir="rtl"] .switch[aria-checked="true"]::after { transform: translateX(-19px); }
+
+/* stage rail fills from the right when the reading direction is RTL */
+html[dir="rtl"] .steps::after { left: auto; right: 10%; }
+html[dir="rtl"] .steps::after { background: linear-gradient(270deg, var(--mint), var(--accent)); }
+html[dir="rtl"] .steps.is-complete::after { background: var(--mint); }
+html[dir="rtl"] .steps-head { left: auto; right: calc(10% + 80% * var(--sp, 0) / 100); margin-left: 0; margin-right: -4.5px; transition: right 0.5s var(--ease), opacity 0.25s var(--ease); }
+
+/* value runs: digits and arrows must not be reordered by the RTL paragraph */
+html[dir="rtl"] .fsum-item > b,
+html[dir="rtl"] .stat > span,
+html[dir="rtl"] .side-row span,
+html[dir="rtl"] .ring-pct,
+html[dir="rtl"] .qbar-top b,
+html[dir="rtl"] .scrub-t,
+html[dir="rtl"] .strip-v { direction: ltr; unicode-bidi: isolate; }
+html[dir="rtl"] .badge,
+html[dir="rtl"] .engine-sum em,
+html[dir="rtl"] .wst-txt em,
+html[dir="rtl"] .about-row em,
+html[dir="rtl"] .frail-out span,
+html[dir="rtl"] .eta { unicode-bidi: plaintext; }
+
+/* Persian labels: Vazirmatn reads better than the mono fallback for words */
+html[lang="fa"] .rcp-k,
+html[lang="fa"] .fact b,
+html[lang="fa"] .side-row b,
+html[lang="fa"] .side-k,
+html[lang="fa"] .spark-k,
+html[lang="fa"] .step-lbl,
+html[lang="fa"] .qbar-scale,
+html[lang="fa"] .pal-g,
+html[lang="fa"] .ctx-g,
+html[lang="fa"] .fc-k,
+html[lang="fa"] .fc-item em,
+html[lang="fa"] .film-mark em { font-family: var(--font-ui); letter-spacing: 0.02em; text-transform: none; }
+html[lang="fa"] .rcp-k, html[lang="fa"] .fact b { font-size: 11px; }
+
+/* side-by-side mode flips the video order, so the tags must follow their own video */
+html[dir="rtl"] .cmp.is-side .cmp-tag.a { left: auto; right: 10px; }
+html[dir="rtl"] .cmp.is-side .cmp-tag.b { right: auto; left: 10px; }
+
+/* charts and waveforms keep chronological left-to-right order */
+html[dir="rtl"] .spark,
+html[dir="rtl"] .wave { direction: ltr; }
+
+/* the drop artwork reads in the new direction */
+html[dir="rtl"] .dz-svg { transform: scaleX(-1); }
+
+/* directional arrows mean "next/back" and must point the other way */
+html[dir="rtl"] .ph-arrow-right,
+html[dir="rtl"] .ph-arrow-left,
+html[dir="rtl"] .ph-caret-right { transform: scaleX(-1); }
+html[dir="rtl"] .strip-v { direction: ltr; text-align: right; }
+
+/* toasts and the dialog close button mirror */
+html[dir="rtl"] .toasts { right: auto; left: 18px; align-items: flex-start; }
+html[dir="rtl"] .toast { animation-name: toast-in-rtl; }
+html[dir="rtl"] .toast.is-out { animation-name: toast-out-rtl; }
+@keyframes toast-in-rtl { from { opacity: 0; transform: translateX(-26px) scale(0.97); } }
+@keyframes toast-out-rtl { to { opacity: 0; transform: translateX(-26px) scale(0.97); } }
+html[dir="rtl"] .modal .m-x { right: auto; left: 14px; }
+
+/* form chrome */
+html[dir="rtl"] .f-label { left: auto; right: 14px; }
+html[dir="rtl"] .f-field-icon .f-input { padding-left: 14px; padding-right: 40px; }
+html[dir="rtl"] .f-field-icon > .ph { left: auto; right: 14px; }
+html[dir="rtl"] .f-field-icon .f-label { left: auto; right: 40px; }
+html[dir="rtl"] .f-trail { right: auto; left: 10px; }
+
+/* the codec check, fps strip and stepper numbers are all fine on their own;
+   this keeps the stage rail nodes' progress rings spinning the same way */
+html[dir="rtl"] .step-node::after,
+html[dir="rtl"] .wst.is-now .wst-dot::before { animation-direction: reverse; }
+
+/* language swap: one soft cross-fade instead of a hard cut */
+html.is-lang-swap .pane.is-active { animation: lang-swap 0.3s var(--ease) both; }
+@keyframes lang-swap { from { opacity: 0.55; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-lang-swap .pane.is-active { animation: none; }
+}

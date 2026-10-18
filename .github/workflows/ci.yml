@@ -1,0 +1,81 @@
+name: ci
+
+# Everything that must stay green before a release tag is worth cutting.
+# The unit suite is hermetic: no GPU, no ffmpeg, no network.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  NODE_VERSION: "22"
+
+jobs:
+  test:
+    name: core tests + i18n
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ci-test
+
+      - name: flow-core unit tests
+        run: cargo test -p flow-core --verbose
+
+      - name: EN/FA key coverage
+        run: node tools/check-i18n.mjs
+
+  build:
+    name: release build (app + wizard)
+    runs-on: windows-latest
+    needs: test
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ci-build
+
+      - name: Install frontend deps
+        run: npm ci
+
+      # The wizard embeds the engine with include_bytes!, so it cannot even compile
+      # without the pack. Same source of truth as release.yml.
+      - name: Fetch the pinned RIFE pack
+        shell: bash
+        run: |
+          git fetch --depth 1 origin refs/heads/engine-pack:refs/remotes/origin/engine-pack
+          git checkout origin/engine-pack -- setup/src-tauri/payload
+          node tools/verify-payload.mjs
+
+      - name: Compile the app for release (no bundling)
+        run: npm run build -- --no-bundle
+
+      - name: Compile the setup wizard for release
+        run: cargo build -p flow-setup --release --features custom-protocol

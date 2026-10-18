@@ -1,0 +1,28 @@
+# Normalize line endings so a checkout on another machine does not rewrite the tree.
+* text=auto eol=lf
+
+*.css text
+*.html text
+*.js text
+*.json text
+*.md text
+*.mjs text
+*.rs text
+*.toml text
+*.yml text
+
+# Windows-only scripts read better with CRLF in the working tree
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+*.ico binary
+*.png binary
+*.woff2 binary
+*.mp4 binary
+*.mkv binary
+*.webm binary
+*.exe binary
+*.zip binary
+*.dll binary
+*.bin binary
