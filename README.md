@@ -99,7 +99,7 @@ Measured on the development machine (GTX 1070, 16 GB, 74 Hz panel) — your numb
 | 4× of a 544×306 · 15 fps · 81-frame clip → 324 frames at 60 fps, `ultrafast` | **≈6 s** |
 | Sustained interpolated rate in that run | **≈33 frames/s** |
 | UI frame rate during install, render and compare | **74 fps** (the panel rate; p95 frame time 13.8 ms) |
-| Setup installer | 2.2 MB app payload + 18 MB engine pack |
+| Wizard download | **25 MB** — it carries the 2.2 MB app installer and the 18 MB RIFE pack, compressed |
 
 The UI is held to a no-dropped-frame budget: progress events are coalesced to one animation frame, ring geometry is cached, and nothing animates `blur`, `backdrop-filter` or layout properties.
 
@@ -169,7 +169,7 @@ The tag triggers `release.yml`; the artifacts land on the Release page a few min
 
 ## Privacy
 
-Probing, interpolation, encoding and muxing all run locally. There is no telemetry, no update pinger, no account and no network call from the app itself — the only downloads are ffmpeg and the engine, and both happen inside the setup, on your click, from the upstream source shown in the log. The design goal is the same as the design system's: everything you can see is doing work.
+Probing, interpolation, encoding and muxing all run locally. There is no telemetry, no update pinger, no account and no network call from the app itself. The one download in the product is ffmpeg, and it only happens inside the setup, on your click, from gyan.dev, with the URL in the log; the RIFE engine is carried in the wizard rather than fetched. The design goal is the same as the design system's: everything you can see is doing work.
 
 ## FAQ
 
