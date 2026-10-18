@@ -26,3 +26,6 @@
 *.zip binary
 *.dll binary
 *.bin binary
+
+# The engine pack is byte-for-byte pinned by tools/verify-payload.mjs - never touch its endings
+setup/src-tauri/payload/** binary
