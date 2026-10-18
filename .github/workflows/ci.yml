@@ -80,7 +80,9 @@ jobs:
       # --no-bundle means there is no NSIS installer to embed, and the wizard
       # include_bytes!s one. A labelled stub is enough to prove the wizard still
       # compiles; release.yml is the only workflow that ships a real payload.
+      # generate_context! also needs the assembled frontend, so build it first.
       - name: Compile the setup wizard for release
         run: |
+          node setup/tools/build.mjs
           node -e "const fs=require('fs');const v=require('./src-tauri/tauri.conf.json').version;const f='setup/src-tauri/payload/flow_'+v+'_x64-setup.exe';fs.mkdirSync('setup/src-tauri/payload',{recursive:true});if(!fs.existsSync(f)){fs.writeFileSync(f,'CI compile stub - not an installer, never shipped.');console.log('stub:',f)}else{console.log('real payload already present')}"
           cargo build -p flow-setup --release --features custom-protocol
