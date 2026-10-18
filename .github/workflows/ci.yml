@@ -26,9 +26,9 @@ jobs:
     runs-on: windows-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -50,9 +50,9 @@ jobs:
     needs: test
     timeout-minutes: 70
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -77,5 +77,10 @@ jobs:
       - name: Compile the app for release (no bundling)
         run: npm run build -- --no-bundle
 
+      # --no-bundle means there is no NSIS installer to embed, and the wizard
+      # include_bytes!s one. A labelled stub is enough to prove the wizard still
+      # compiles; release.yml is the only workflow that ships a real payload.
       - name: Compile the setup wizard for release
-        run: cargo build -p flow-setup --release --features custom-protocol
+        run: |
+          node -e "const fs=require('fs');const v=require('./src-tauri/tauri.conf.json').version;const f='setup/src-tauri/payload/flow_'+v+'_x64-setup.exe';fs.mkdirSync('setup/src-tauri/payload',{recursive:true});if(!fs.existsSync(f)){fs.writeFileSync(f,'CI compile stub - not an installer, never shipped.');console.log('stub:',f)}else{console.log('real payload already present')}"
+          cargo build -p flow-setup --release --features custom-protocol
